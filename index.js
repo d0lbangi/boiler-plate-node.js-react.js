@@ -2,10 +2,12 @@ const express = require('express');
 const app = express();
 const port = 5000;
 
+const config = require('./config/key');
+
 const { User } = require("./models/User");
 
 const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://jeonghopark:thfla1823612@cluster0.sp9hwu8.mongodb.net/?retryWrites=true&w=majority', {})
+mongoose.connect(config.mongoURI, {})
   .then(() => console.log('MongoDB Connected....'))
   .catch(err => console.log(err))
 
