@@ -23,6 +23,12 @@ mongoose.connect(config.mongoURI, {})
 app.get('/', (req, res) => res.send('Hello World!~~ '));
 app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
 
+app.get('/api/hello', (req, res) => {
+  res.send("안녕하세요 ~")
+}) // 프론트로 메시지 전달
+
+
+
 app.post('/api/users/register', async (req, res) => {
   // req.body로 클라이언트에서 보낸 데이터를 받아와 User 모델을 생성
   const user = new User(req.body);
