@@ -3,6 +3,7 @@ const app = express();
 const cookieParser = require('cookie-parser');
 const config = require('./config/key');
 
+const { auth } = require("./middleware/auth");
 const { User } = require("./models/User");
 
 // application/x-www-form-urlencoded 
@@ -73,6 +74,23 @@ app.post('/api/users/login', async (req, res) => {
     });
   }
 });
+
+// role 1 어드민      role 2 특정 부서 어드민
+// role 0 -> 일반유저 role 이 아니면 관리자
+app.get('/api/users/auth', auth, (req, res) => {
+
+  // 여기까지 미들웨어를 통과해 왔다는 얘기는 Authenticaiton이 True 라는 말.
+  res.status(200).json({
+    _id: req.user._id,
+    isAdmin: req.user.role === 0 ? false : true,
+    isAuth: true,
+    email: req.user.email,
+    name: req.user.name,    
+    lastname: req.user.lastname,
+    role: req.user.role,
+    image: req.user.image
+  })
+})
 
 const port = 5000;
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
