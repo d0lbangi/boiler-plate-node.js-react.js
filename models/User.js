@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const jwt = require('jsonwebtoken');
 
 const userSchema = mongoose.Schema({
   name: {
@@ -38,7 +38,6 @@ const userSchema = mongoose.Schema({
 userSchema.pre('save', function( next ) {
   
   var user = this;
-
   if(user.isModified('password')) {
 
     // 비밀번호를 암호화 시킨다.
@@ -51,11 +50,40 @@ userSchema.pre('save', function( next ) {
         if(err) return next(err)
         user.password = hash
         next()
-      });
-    });
+        })
+      })
+  } else {
+      next()
   }
 })
 
-const User = mongoose.model('User', userSchema);
+// plainPassword 1234567 암호화된 비밀번호 $2b$10$oYxMVbCt46SOgq8CidSp9.GNQd/0SRUapHiQ3TWE978/0D2YZja7i
+userSchema.methods.comparePassword = function (plainPassword) {
+  return new Promise((resolve, reject) => {
+    bcrypt.compare(plainPassword, this.password, (err, isMatch) => {
+      if (err) reject(err);
+      resolve(isMatch);
+    });
+  });
+};
 
+
+userSchema.methods.generateToken = function (cb) {
+  const user = this;
+  // console.log('user._id', user._id)
+
+  // jsonwebtoken을 이용해서 토큰 생성하기
+  const token = jwt.sign(user._id.toHexString(), 'secretToken');
+  // user._id + 'secretTOken' = token
+  // ->
+  // 'secretToken' -> user._id
+
+  user.token = token;
+  
+  return user.save().then(()=> {
+    return token;
+  });
+};
+
+const User = mongoose.model('User', userSchema);
 module.exports = { User };
