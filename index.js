@@ -94,12 +94,8 @@ app.get('/api/users/auth', auth, (req, res) => {
 
 // 로그아웃이라면 로그인 상태이기 때문에 중간에 auth 를 넣어주면 된다. 
 app.get('/api/users/logout', auth, async (req, res) => {
-  console.log('Received a request to /api/users/logout');
-
   try {
-    // console.log('req.user', req.user)
-    await User.findOneAndUpdate({ _id: req.user._id}, { token: ""});
-
+    await User.findOneAndUpdate({ _id: req.user._id }, { token: '' });
     res.clearCookie('x_auth').status(200).send({
       success: true,
     });
@@ -107,7 +103,7 @@ app.get('/api/users/logout', auth, async (req, res) => {
     console.error(err);
     res.status(500).json({
       success: false,
-      err: err.message
+      err: err.message,
     });
   }
 });
