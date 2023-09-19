@@ -85,12 +85,32 @@ app.get('/api/users/auth', auth, (req, res) => {
     isAdmin: req.user.role === 0 ? false : true,
     isAuth: true,
     email: req.user.email,
-    name: req.user.name,    
+    name: req.user.name,
     lastname: req.user.lastname,
     role: req.user.role,
-    image: req.user.image
-  })
-})
+    image: req.user.image,
+  });
+});
+
+// 로그아웃이라면 로그인 상태이기 때문에 중간에 auth 를 넣어주면 된다. 
+app.get('/api/users/logout', auth, async (req, res) => {
+  console.log('Received a request to /api/users/logout');
+
+  try {
+    // console.log('req.user', req.user)
+    await User.findOneAndUpdate({ _id: req.user._id}, { token: ""});
+
+    res.clearCookie('x_auth').status(200).send({
+      success: true,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      err: err.message
+    });
+  }
+});
 
 const port = 5000;
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
