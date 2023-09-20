@@ -27,7 +27,7 @@ export function registerUser(dataToSubmit) {
     }
 }
 
-export function authUser() {
+export function auth() {
 
     const request = axios.get('/api/users/auth')
         .then(response => response.data)
@@ -37,4 +37,3 @@ export function authUser() {
         payload: request
     }
 }
-

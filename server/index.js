@@ -1,27 +1,31 @@
 const express = require('express');
-const app = express();
 const cookieParser = require('cookie-parser');
 const config = require('./config/key');
 
 const { auth } = require("./middleware/auth");
 const { User } = require("./models/User");
-
-// application/x-www-form-urlencoded 
-app.use(express.urlencoded({ extended: true }));
-
-// application/json 
-app.use(cookieParser());
-app.use(express.json());
-
+const app = express();
 const mongoose = require('mongoose');
 
-mongoose.connect(config.mongoURI, {
-  // useNewUrlParser: true,
-  // useUnifiedTopology: true,
-  // ssl: true
-})
-  .then(() => console.log('MongoDB Connected....'))
-  .catch(err => console.error(err))
+// middleware
+// application/json
+app.use(express.json());
+app.use(cookieParser());
+// application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: false }));
+
+// db connect
+mongoose
+.connect(config.mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    ssl: true,
+    useFindAndModify: false,
+    dbName: "boiler-plate" // 이 이름으로 db가 생성됩니다.
+  })
+  .then(() => console.log(`mongoDB connected`))
+  .catch((err) => console.error(err));
 
 // TEST
 app.get('/', (req, res) => res.send('Hello World!~~ '));
@@ -29,7 +33,6 @@ app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
 app.get('/api/hello', (req, res) => {
   res.send("안녕하세요 ~")
 }) // 프론트로 메시지 전달
-
 
 app.post('/api/users/register', async (req, res) => {
   // req.body로 클라이언트에서 보낸 데이터를 받아와 User 모델을 생성
