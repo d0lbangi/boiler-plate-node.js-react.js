@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../../../_actions/user_action';
 import Axios from 'axios';
-import { withRouter } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 
 function RegisterPage(props) {
 
@@ -31,7 +31,7 @@ function RegisterPage(props) {
     e.preventDefault();
 
     if(Password !== ConfirmPassword) {
-      return alert("비밀번호와 비밀번호 확인은 같아야 합니다.")
+      return alert('비밀번호와 비밀번호 확인은 같아야 합니다.')
     }
 
     let body = {
@@ -40,7 +40,7 @@ function RegisterPage(props) {
       name : Name
     }
 
-    dispatch(RegisterPage(body))
+    dispatch(registerUser(body))
       .then(response => {
         if (response.payload.success) {
           props.history.push('/login')
@@ -60,12 +60,16 @@ function RegisterPage(props) {
         >
             <label>Email</label>
             <input type="email" value={Email} onChange={onEmailHandler} />
+            
             <label>Name</label>
             <input type="text" value={Name} onChange={onNameHandler} />
+            
             <label>Password</label>
             <input type="password" value={Password} onChange={onPasswordHandler} />
+            
             <label>Password</label>
             <input type="password" value={ConfirmPassword} onChange={onConfirmPasswordHandler} />
+            
             <br />
             <button type="submit">
                 Sign Up
