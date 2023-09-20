@@ -15,9 +15,13 @@ app.use(express.json());
 
 const mongoose = require('mongoose');
 
-mongoose.connect(config.mongoURI, {})
+mongoose.connect(config.mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  ssl: true
+})
   .then(() => console.log('MongoDB Connected....'))
-  .catch(err => console.error(err)); // 오류 시 에러 메시지를 출력
+  .catch(err => console.error(err));
 
 // TEST
 app.get('/', (req, res) => res.send('Hello World!~~ '));
