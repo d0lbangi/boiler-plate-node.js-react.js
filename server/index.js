@@ -16,21 +16,19 @@ app.use(express.json());
 const mongoose = require('mongoose');
 
 mongoose.connect(config.mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  ssl: true
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true,
+  // ssl: true
 })
   .then(() => console.log('MongoDB Connected....'))
-  .catch(err => console.error(err));
+  .catch(err => console.error(err))
 
 // TEST
 app.get('/', (req, res) => res.send('Hello World!~~ '));
 app.get('/api/hello', (req, res) => res.send('Hello World!~~ '));
-
 app.get('/api/hello', (req, res) => {
   res.send("안녕하세요 ~")
 }) // 프론트로 메시지 전달
-
 
 
 app.post('/api/users/register', async (req, res) => {
